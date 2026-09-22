@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FinanPro - O seu Portal de Inteligência Financeira</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+
+  <div class="app-container">
+    <!-- BARRA LATERAL -->
+    <aside class="sidebar">
+      <div class="logo">
+        <div class="logo-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline>
+            <polyline points="17 6 23 6 23 12"></polyline>
+          </svg>
+        </div>
+        <h2>Finan<span>Pro</span></h2>
+      </div>
+
+      <nav class="nav-menu">
+        <button class="nav-btn unlogged-only active" id="btn-tab-landing" onclick="switchTab('landing', this)">
+          Início
+        </button>
+        <button class="nav-btn logged-only" id="btn-tab-dashboard" onclick="switchTab('dashboard', this)" style="display: none;">
+          Visão Geral do Mercado
+        </button>
+        <button class="nav-btn logged-only" id="btn-tab-carteira" onclick="switchTab('carteira', this)" style="display: none;">
+          Minha Carteira
+        </button>
+        <button class="nav-btn logged-only" id="btn-tab-configuracoes" onclick="switchTab('configuracoes', this)" style="display: none;">
+          Configurações
+        </button>
+      </nav>
+
+      <div class="user-profile-section" id="userProfileSection"></div>
+    </aside>
+
+    <!-- CONTEÚDO PRINCIPAL -->
+    <main class="main-content">
+
+      <!-- ABA 1: LANDING PAGE -->
+      <section id="tab-landing" class="tab-content active">
+        <div class="hero-section">
+          <div class="hero-text">
+            <span class="hero-tag">INTELIGÊNCIA & GESTÃO</span>
+            <h1>Sua jornada para a <span>liberdade financeira</span> começa aqui.</h1>
+            <p>O FinanPro reúne cotações internacionais atualizadas em tempo real e ferramentas completas para você acompanhar seu patrimônio em um só lugar.</p>
+            <div class="hero-actions">
+              <button class="btn-primary btn-large" id="btnHeroRegister" onclick="toggleAuthModal(true)">Abra sua conta gratuita</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="features-section">
+          <h2 class="section-title">Por que gerenciar seu patrimônio com o <span>FinanPro</span>?</h2>
+          <div class="features-grid">
+            <div class="feature-card">
+              <h3>Cotações Internacionais</h3>
+              <p>Acompanhe Dólar, Euro, Libra Esterlina e Bitcoin com dados atualizados instantaneamente.</p>
+            </div>
+            <div class="feature-card">
+              <h3>Gráficos Interativos</h3>
+              <p>Análise de tendência de moedas e ativos para você tomar as melhores decisões no mercado financeiro.</p>
+            </div>
+            <div class="feature-card">
+              <h3>Carteira Personalizada</h3>
+              <p>Calcule seu patrimônio total automaticamente convertendo todas as suas moedas para o Real.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="cta-banner">
+          <h2>Pronto para assumir o controle dos seus investimentos?</h2>
+          <p>Crie sua conta em menos de 1 minuto e simule sua carteira de forma 100% gratuita.</p>
+          <button class="btn-primary btn-large" onclick="toggleAuthModal(true)">Começar Agora</button>
+        </div>
+      </section>
+
+      <!-- ABA 2: VISÃO GERAL DO MERCADO (GRÁFICO CLICÁVEL) -->
+      <section id="tab-dashboard" class="tab-content">
+        <header class="top-header">
+          <h1>Visão Geral do Mercado</h1>
+          <p class="subtitle">Clique em uma moeda abaixo para alterar o gráfico de cotação</p>
+        </header>
+
+        <div class="cards-grid">
+          <div class="card clickable active-card" onclick="selectChartCoin('USD', 'Dólar Americano (USD)')">
+            <div class="card-header">
+              <span class="coin-name">Dólar Americano (USD)</span>
+              <span class="badge" id="usd-change">0.00%</span>
+            </div>
+            <div class="card-value" id="usd-price">R$ --,--</div>
+          </div>
+
+          <div class="card clickable" onclick="selectChartCoin('EUR', 'Euro (EUR)')">
+            <div class="card-header">
+              <span class="coin-name">Euro (EUR)</span>
+              <span class="badge" id="eur-change">0.00%</span>
+            </div>
+            <div class="card-value" id="eur-price">R$ --,--</div>
+          </div>
+
+          <div class="card clickable" onclick="selectChartCoin('GBP', 'Libra Esterlina (GBP)')">
+            <div class="card-header">
+              <span class="coin-name">Libra Esterlina (GBP)</span>
+              <span class="badge" id="gbp-change">0.00%</span>
+            </div>
+            <div class="card-value" id="gbp-price">R$ --,--</div>
+          </div>
+
+          <div class="card clickable" onclick="selectChartCoin('BTC', 'Bitcoin (BTC)')">
+            <div class="card-header">
+              <span class="coin-name">Bitcoin (BTC)</span>
+              <span class="badge" id="btc-change">0.00%</span>
+            </div>
+            <div class="card-value" id="btc-price">R$ --,--</div>
+          </div>
+        </div>
+
+        <div class="chart-container">
+          <h3 id="chartTitle">Histórico de Cotação - Dólar Americano (USD)</h3>
+          <canvas id="marketChart"></canvas>
+        </div>
+      </section>
+
+      <!-- ABA 3: MINHA CARTEIRA + BOTÃO DE DEPÓSITO -->
+      <section id="tab-carteira" class="tab-content">
+        <header class="top-header">
+          <h1>Minha Carteira de Ativos</h1>
+          <p class="subtitle">Patrimônio recalculado automaticamente com base no mercado</p>
+        </header>
+
+        <div class="portfolio-summary-card">
+          <div>
+            <span>Patrimônio Total Estimado</span>
+            <h2 id="totalPortfolioValue">R$ 0,00</h2>
+          </div>
+          <button class="btn-primary btn-large" onclick="toggleDepositModal(true)">+ Adicionar Saldo (Depósito)</button>
+        </div>
+
+        <div class="portfolio-grid">
+          <div class="portfolio-form-card">
+            <h3>Atualizar Meus Ativos</h3>
+            <p>Insira a quantidade que possui de cada moeda:</p>
+            <form id="portfolioForm">
+              <div class="form-group">
+                <label for="inputUsd">Dólares (USD):</label>
+                <input type="number" id="inputUsd" step="any" placeholder="0.00">
+              </div>
+              <div class="form-group">
+                <label for="inputEur">Euros (EUR):</label>
+                <input type="number" id="inputEur" step="any" placeholder="0.00">
+              </div>
+              <div class="form-group">
+                <label for="inputGbp">Libras (GBP):</label>
+                <input type="number" id="inputGbp" step="any" placeholder="0.00">
+              </div>
+              <div class="form-group">
+                <label for="inputBtc">Bitcoin (BTC):</label>
+                <input type="number" id="inputBtc" step="any" placeholder="0.00">
+              </div>
+              <div class="form-group">
+                <label for="inputBrl">Saldo em Reais (BRL):</label>
+                <input type="number" id="inputBrl" step="any" placeholder="0.00">
+              </div>
+              <button type="submit" class="btn-primary full-width">Salvar Alterações</button>
+            </form>
+          </div>
+
+          <div class="portfolio-breakdown-card">
+            <h3>Detalhamento da Carteira</h3>
+            <div class="asset-list" id="assetList"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ABA 4: CONFIGURAÇÕES -->
+      <section id="tab-configuracoes" class="tab-content">
+        <header class="top-header">
+          <h1>Configurações do Sistema</h1>
+          <p class="subtitle">Gerencie suas preferências de conta e exibição</p>
+        </header>
+
+        <div class="settings-card">
+          <div class="setting-item">
+            <div>
+              <strong>Moeda Principal de Exibição</strong>
+              <p>Moeda base para exibição do patrimônio total</p>
+            </div>
+            <select id="settingCurrency">
+              <option value="BRL">Real Brasileiro (BRL)</option>
+              <option value="USD">Dólar Americano (USD)</option>
+              <option value="EUR">Euro (EUR)</option>
+              <option value="GBP">Libra Esterlina (GBP)</option>
+            </select>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <input type="file" id="avatarFileInput" accept="image/*" style="display: none;" onchange="handleAvatarUpload(event)">
+
+  <!-- MODAL DE LOGIN / CADASTRO -->
+  <div class="modal-overlay" id="authModal">
+    <div class="modal-card">
+      <button class="close-modal-btn" onclick="toggleAuthModal(false)">&times;</button>
+
+      <div class="auth-tabs">
+        <button class="auth-tab-btn active" id="btnTabLogin" onclick="switchAuthTab('login')">Entrar</button>
+        <button class="auth-tab-btn" id="btnTabRegister" onclick="switchAuthTab('register')">Cadastrar</button>
+      </div>
+
+      <form id="loginForm" class="auth-form active">
+        <div class="form-group">
+          <label for="loginEmail">E-mail</label>
+          <input type="email" id="loginEmail" placeholder="seu@email.com" autocomplete="username" required>
+        </div>
+        <div class="form-group">
+          <label for="loginPassword">Senha</label>
+          <input type="password" id="loginPassword" maxlength="8" placeholder="Até 8 caracteres" autocomplete="current-password" required>
+        </div>
+        <div class="form-checkbox-group">
+          <input type="checkbox" id="loginRememberMe">
+          <label for="loginRememberMe">Lembre-se de mim</label>
+        </div>
+        <button type="submit" class="btn-primary full-width">Entrar</button>
+      </form>
+
+      <form id="registerForm" class="auth-form">
+        <div class="form-group">
+          <label for="regName">Nome Completo</label>
+          <input type="text" id="regName" placeholder="Ex: Maria Silva" required>
+        </div>
+        <div class="form-group">
+          <label for="regEmail">E-mail</label>
+          <input type="email" id="regEmail" placeholder="seu@email.com" autocomplete="username" required>
+        </div>
+        <div class="form-group">
+          <label for="regPassword">Senha (Até 8 caracteres)</label>
+          <input type="password" id="regPassword" maxlength="8" placeholder="Max. 8 caracteres" autocomplete="new-password" required>
+        </div>
+        <div class="form-checkbox-group">
+          <input type="checkbox" id="regRememberMe" checked>
+          <label for="regRememberMe">Lembrar meus dados para acessos futuros</label>
+        </div>
+        <button type="submit" class="btn-primary full-width">Criar Minha Conta</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL DE DEPÓSITO SIMULADO (PIX / CARTÃO / BOLETO) -->
+  <div class="modal-overlay" id="depositModal">
+    <div class="modal-card">
+      <button class="close-modal-btn" onclick="toggleDepositModal(false)">&times;</button>
+      <h2 style="margin-bottom: 8px;">Depositar Saldo</h2>
+      <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 20px;">Adicione fundos em Reais à sua conta FinanPro</p>
+
+      <form id="depositForm">
+        <div class="form-group">
+          <label for="depositAmount">Valor do Depósito (R$)</label>
+          <input type="number" id="depositAmount" min="10" step="any" placeholder="Ex: 500,00" required>
+        </div>
+
+        <div class="form-group">
+          <label>Forma de Pagamento</label>
+          <select id="depositMethod" onchange="updateDepositMethodView()">
+            <option value="pix">PIX (Aprovação Instantânea)</option>
+            <option value="card">Cartão de Crédito</option>
+            <option value="boleto">Boleto Bancário</option>
+          </select>
+        </div>
+
+        <!-- VISUALIZAÇÃO PIX -->
+        <div id="methodPixView" class="payment-method-box">
+          <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 8px;">Chave PIX copia e cola para simulação:</p>
+          <input type="text" readonly value="00020126360014BR.GOV.BCB.PIX0114finanpro.pix.simulado" style="font-size: 0.75rem; background-color: #0f172a;">
+        </div>
+
+        <!-- VISUALIZAÇÃO CARTÃO -->
+        <div id="methodCardView" class="payment-method-box" style="display: none;">
+          <div class="form-group">
+            <input type="text" placeholder="Número do Cartão (Simulado)" maxlength="16">
+          </div>
+        </div>
+
+        <button type="submit" class="btn-primary full-width" style="margin-top: 15px;">Confirmar Depósito</button>
+      </form>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+
+</html>
