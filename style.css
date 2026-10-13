@@ -592,9 +592,9 @@ body {
 .auth-form.active {
   display: block;
 }
-/* Ajuste definitivo para celular */
+
+/* Ajuste refinado e espaçamento limpo para celular */
 @media (max-width: 768px) {
-  /* Força a tela inteira a ocupar 100% e empilhar os elementos */
   .app-container {
     display: flex !important;
     flex-direction: column !important;
@@ -604,21 +604,28 @@ body {
     overflow-x: hidden !important;
   }
 
-  /* Zera a largura fixa do menu lateral e faz ele ocupar a tela toda em cima */
   .sidebar {
     width: 100% !important;
     min-width: 100% !important;
     max-width: 100% !important;
     height: auto !important;
     position: relative !important;
+    /* Adiciona margem embaixo do menu para desgrudar do conteúdo seguinte */
+    margin-bottom: 20px !important;
+    border-right: none !important;
+    border-bottom: 1px solid var(--border-color);
   }
 
-  /* Faz o conteúdo principal ocupar a largura total sem sobras */
   .main-content {
     width: 100% !important;
     max-width: 100% !important;
     padding: 15px !important;
     margin: 0 !important;
     box-sizing: border-box !important;
+  }
+
+  /* Garante respiro extra na primeira seção (hero) no mobile */
+  .hero-section {
+    margin-top: 10px !important;
   }
 }
